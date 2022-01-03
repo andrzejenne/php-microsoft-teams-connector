@@ -2,10 +2,12 @@
 
 namespace Sebbmyr\Teams\Cards\Adaptive\Elements;
 
+use Sebbmyr\Teams\Cards\Adaptive\AbstractElement;
+
 /**
  * FactSet card element
  */
-class FactSet extends BaseElement implements AdaptiveCardElement
+class FactSet extends AbstractElement
 {
 
     /**
@@ -19,45 +21,27 @@ class FactSet extends BaseElement implements AdaptiveCardElement
     
     public function __construct($facts = null)
     {
-        $this->setType("FactSet");
+        parent::__construct('FactSet');
         $this->facts = $facts;
     }
 
     /**
      * Returns content of card element
-     * @param  float $version
+     *
      * @return array
+     * @throws \Exception
      */
-    public function getContent($version)
+    public function jsonSerialize()
     {
         // if facts is not set, throw exception
         if (!isset($this->facts)) {
-            throw new \Exception("Card element facts is not set", 500);
+            throw new \Exception('Card element facts is not set', 500);
         }
 
-        $element = $this->getBaseContent(
-            ["facts" => $this->getFactsContent()],
-            $version
-        );
-
-        return $element;
-    }
-
-    /**
-     * Returns generated facts content
-     * @return array
-     */
-    private function getFactsContent()
-    {
-        $facts = [];
-
-        foreach ($this->facts as $fact) {
-            if ($fact instanceof Fact) {
-                $facts[] = $fact->getContent();
-            }
-        }
-
-        return $facts;
+        return parent::jsonSerialize()
+            + [
+                'facts' => $this->facts
+            ];
     }
 
     /**
@@ -65,11 +49,13 @@ class FactSet extends BaseElement implements AdaptiveCardElement
      * @param Fact $fact
      * @return FactSet
      */
-    public function addFact(Fact $fact)
+    public function addFact(Fact $fact): self
     {
         if (!isset($this->facts)) {
             $this->facts = [];
         }
+
+        $fact->setVersion($this->version);
 
         $this->facts[] = $fact;
 

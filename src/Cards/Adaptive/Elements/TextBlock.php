@@ -2,14 +2,16 @@
 
 namespace Sebbmyr\Teams\Cards\Adaptive\Elements;
 
+use Sebbmyr\Teams\Cards\Adaptive\AbstractElement;
+
 /**
  * Text block element
  *
- * @todo add checks to predefined styles, e.g. BlockElementHeight "auto" and "stretch"
+ * @todo add checks to predefined styles, e.g. BlockElementHeight 'auto' and 'stretch'
  *
  * @see https://adaptivecards.io/explorer/TextBlock.html
  */
-class TextBlock extends BaseElement implements AdaptiveCardElement
+class TextBlock extends AbstractElement
 {
     /**
      * Text to display. A subset of markdown is supported (https://aka.ms/ACTextFeatures)
@@ -92,7 +94,7 @@ class TextBlock extends BaseElement implements AdaptiveCardElement
 
     public function __construct($text = null)
     {
-        $this->setType("TextBlock");
+        parent::__construct('TextBlock');
         $this->text = $text;
     }
 
@@ -101,47 +103,49 @@ class TextBlock extends BaseElement implements AdaptiveCardElement
      * @param  float $version
      * @return array
      */
-    public function getContent($version)
+    public function jsonSerialize()
     {
         // if text is not set, throw exception
         if (!isset($this->text)) {
-            throw new \Exception("Card element text is not set", 500);
+            throw new \Exception('Card element text is not set', 500);
         }
-        $element = $this->getBaseContent(
-            ["text" => $this->text],
-            $version
-        );
+        $element = parent::jsonSerialize() +
+            ['text' => $this->text];
+        
+        if ($this->version >= 1.0) {
 
-        if (isset($this->color) && $version >= 1.0) {
-            $element["color"] = $this->color;
+            if (isset($this->color) ) {
+                $element['color'] = $this->color;
+            }
+
+            if (isset($this->horizontalAlignment) ) {
+                $element['horizontalAlignment'] = $this->horizontalAlignment;
+            }
+
+            if (isset($this->isSubtle) ) {
+                $element['isSubtle'] = $this->isSubtle;
+            }
+
+            if (isset($this->maxLines) ) {
+                $element['maxLines'] = $this->maxLines;
+            }
+
+            if (isset($this->size) ) {
+                $element['size'] = $this->size;
+            }
+
+            if (isset($this->weight) ) {
+                $element['weight'] = $this->weight;
+            }
+
+            if (isset($this->wrap) ) {
+                $element['wrap'] = $this->wrap;
+            }
+
         }
 
-        if (isset($this->fontType) && $version >= 1.2) {
-            $element["fontType"] = $this->fontType;
-        }
-
-        if (isset($this->horizontalAlignment) && $version >= 1.0) {
-            $element["horizontalAlignment"] = $this->horizontalAlignment;
-        }
-
-        if (isset($this->isSubtle) && $version >= 1.0) {
-            $element["isSubtle"] = $this->isSubtle;
-        }
-
-        if (isset($this->maxLines) && $version >= 1.0) {
-            $element["maxLines"] = $this->maxLines;
-        }
-
-        if (isset($this->size) && $version >= 1.0) {
-            $element["size"] = $this->size;
-        }
-
-        if (isset($this->weight) && $version >= 1.0) {
-            $element["weight"] = $this->weight;
-        }
-
-        if (isset($this->wrap) && $version >= 1.0) {
-            $element["wrap"] = $this->wrap;
+        if (isset($this->fontType) && $this->version >= 1.2) {
+            $element['fontType'] = $this->fontType;
         }
 
         return $element;
@@ -152,7 +156,7 @@ class TextBlock extends BaseElement implements AdaptiveCardElement
      * @param string $text
      * @return TextBlock
      */
-    public function setText($text)
+    public function setText(string $text): self
     {
         $this->text = $text;
 
@@ -164,7 +168,7 @@ class TextBlock extends BaseElement implements AdaptiveCardElement
      * @param string $color
      * @return TextBlock
      */
-    public function setColor($color)
+    public function setColor(string $color): self
     {
         $this->color = $color;
 
@@ -176,7 +180,7 @@ class TextBlock extends BaseElement implements AdaptiveCardElement
      * @param string $fontType
      * @return TextBlock
      */
-    public function setFontType($fontType)
+    public function setFontType(string $fontType): self
     {
         $this->fontType = $fontType;
 
@@ -184,11 +188,11 @@ class TextBlock extends BaseElement implements AdaptiveCardElement
     }
 
     /**
-     * Sets horizontal aligment. Available options can be found in Styles.php
+     * Sets horizontal alignment. Available options can be found in Styles.php
      * @param string $alignment
      * @return TextBlock
      */
-    public function setHorizontalAligment($alignment)
+    public function setHorizontalAligment(string $alignment): self
     {
         $this->horizontalAlignment = $alignment;
 
@@ -200,7 +204,7 @@ class TextBlock extends BaseElement implements AdaptiveCardElement
      * @param bool $isSubtle
      * @return TextBlock
      */
-    public function setIsSubtle($isSubtle)
+    public function setIsSubtle(bool $isSubtle): self
     {
         $this->isSubtle = $isSubtle;
 
@@ -212,7 +216,7 @@ class TextBlock extends BaseElement implements AdaptiveCardElement
      * @param int $maxLines
      * @return TextBlock
      */
-    public function setMaxLines($maxLines)
+    public function setMaxLines(int $maxLines): self
     {
         if ($maxLines < 1) {
             return $this;
@@ -228,7 +232,7 @@ class TextBlock extends BaseElement implements AdaptiveCardElement
      * @param string $size
      * @return TextBlock
      */
-    public function setSize($size)
+    public function setSize(string $size): self
     {
         $this->size = $size;
 
@@ -240,7 +244,7 @@ class TextBlock extends BaseElement implements AdaptiveCardElement
      * @param string $weight
      * @return TextBlock
      */
-    public function setWeight($weight)
+    public function setWeight(string $weight): self
     {
         $this->weight = $weight;
 
@@ -252,7 +256,7 @@ class TextBlock extends BaseElement implements AdaptiveCardElement
      * @param bool $wrap
      * @return TextBlock
      */
-    public function setWrap($wrap)
+    public function setWrap(bool $wrap): self
     {
         $this->wrap = $wrap;
 

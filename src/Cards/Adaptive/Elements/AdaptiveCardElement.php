@@ -2,7 +2,7 @@
 
 namespace Sebbmyr\Teams\Cards\Adaptive\Elements;
 
-interface AdaptiveCardElement
+interface AdaptiveCardElement extends \JsonSerializable
 {
-    public function getContent($version);
+    public function setVersion(float $version);
 }

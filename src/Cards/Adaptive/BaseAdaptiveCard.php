@@ -10,40 +10,40 @@ use Sebbmyr\Teams\AbstractCard as Card;
 class BaseAdaptiveCard extends Card
 {
     
-    public function getMessage()
+    public function jsonSerialize()
     {
         $card = [
-            "contentType" => "application/vnd.microsoft.card.adaptive",
-            "contentUrl" => null,
-            "content" => [
-                "\$schema" => "http://adaptivecards.io/schemas/adaptive-card.json",
-                "type" => "AdaptiveCard",
-                "version" => "1.2",
+            'contentType' => 'application/vnd.microsoft.card.adaptive',
+            'contentUrl' => null,
+            'content' => [
+                '\$schema' => 'http://adaptivecards.io/schemas/adaptive-card.json',
+                'type' => 'AdaptiveCard',
+                'version' => '1.2',
             ],
         ];
 
         $acceptedKeys = [
-            "actions",
-            "body",
-            "selectAction",
-            "fallbackText",
-            "backgroundImage",
-            "minHeight",
-            "speak",
-            "lang",
-            "verticalContentAligment",
+            'actions',
+            'body',
+            'selectAction',
+            'fallbackText',
+            'backgroundImage',
+            'minHeight',
+            'speak',
+            'lang',
+            'verticalContentAligment',
         ];
         foreach ($this->data as $key => $value) {
             if (!in_array($key, $acceptedKeys)) {
                 continue;
             }
             
-            $card["content"][$key] = $value;
+            $card['content'][$key] = $value;
         }
 
         $message = [
-            "type" => "message",
-            "attachments" => [$card],
+            'type' => 'message',
+            'attachments' => [$card],
         ];
 
         return $message;

@@ -2,6 +2,8 @@
 
 namespace Sebbmyr\Teams\Cards\Adaptive\Elements;
 
+use Sebbmyr\Teams\Cards\Adaptive\AbstractElement;
+
 /**
  * Media element
  *
@@ -10,7 +12,7 @@ namespace Sebbmyr\Teams\Cards\Adaptive\Elements;
  * @version 1.1
  * @see https://adaptivecards.io/explorer/Media.html
  */
-class Media extends BaseElement implements AdaptiveCardElement
+class Media extends AbstractElement
 {
     /**
      * Array of media sources to attempt to play.
@@ -40,78 +42,54 @@ class Media extends BaseElement implements AdaptiveCardElement
 
     public function __construct($sources = null)
     {
-        $this->setType("Media");
+        parent::__construct('Media');
+
         $this->sources = $sources;
     }
 
     /**
      * Returns content of card element
-     * @param  float $version
+     *
      * @return array
+     * @throws \Exception
      */
-    public function getContent($version)
+    public function jsonSerialize()
     {
         // if sources is not set, throw exception
         if (!isset($this->sources)) {
-            throw new \Exception("Card element sources is not set", 500);
+            throw new \Exception('Card element sources is not set', 500);
         }
-        $element = $this->getBaseContent(
-            ["sources" => $this->getSourcesContent($version)],
-            $version
-        );
+        $data = parent::jsonSerialize() +
+            ['sources' => $this->sources];
 
-        if (isset($this->poster) && $version >= 1.1) {
-            $element["poster"] = $this->poster;
-        }
+        if ($this->version >= 1.1) {
+            if (isset($this->poster)) {
+                $data['poster'] = $this->poster;
+            }
 
-        if (isset($this->altText) && $version >= 1.1) {
-            $element["altText"] = $this->altText;
-        }
-
-        return $element;
-    }
-
-    /**
-     * Returns generated sources content
-     *
-     * @param  float $version
-     * @return array
-     */
-    private function getSourcesContent($version)
-    {
-        $sources = [];
-
-        foreach ($this->sources as $source) {
-            if ($source instanceof MediaSource) {
-                $sources[] = $source->getContent($version);
-            } else {
-                $sources[] = $source;
+            if (isset($this->altText)) {
+                $data['altText'] = $this->altText;
             }
         }
 
-        return $sources;
+        return $data;
     }
 
     /**
-     * Sets sources
-     * @param array $sources
+     * Adds source
+     *
+     * @param MediaSource $source
      * @return Media
      */
-    public function setSources($sources)
+    public function addSource(MediaSource $source): self
     {
         if (!isset($this->sources)) {
             $this->sources = [];
         }
 
-        foreach ($sources as $source) {
-            if ($source instanceof MediaSource) {
-                $this->addMediaSource($source);
-            } else {
-                $this->sources[] = $source;
-            }
-        }
+        $source->setVersion($this->version);
 
-        return $this;
+        return $this->addMediaSource($source);
     }
 
     /**
@@ -119,7 +97,7 @@ class Media extends BaseElement implements AdaptiveCardElement
      * @param string $poster
      * @return Media
      */
-    public function setPoster($poster)
+    public function setPoster(string $poster): self
     {
         $this->poster = $poster;
 
@@ -131,7 +109,7 @@ class Media extends BaseElement implements AdaptiveCardElement
      * @param string $altText
      * @return Media
      */
-    public function setAltText($altText)
+    public function setAltText(string $altText): self
     {
         $this->altText = $altText;
 
@@ -143,7 +121,7 @@ class Media extends BaseElement implements AdaptiveCardElement
      * @param MediaSource $source
      * @return Media
      */
-    public function addMediaSource(MediaSource $source)
+    private function addMediaSource(MediaSource $source): self
     {
         if (!isset($this->sources)) {
             $this->sources = [];

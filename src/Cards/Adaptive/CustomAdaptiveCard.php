@@ -9,17 +9,17 @@ use Sebbmyr\Teams\Cards\Adaptive\Elements\AdaptiveCardElement;
 /**
  * Custom adaptive card
  *
- * "Action.Submit" is currently not supported
+ * 'Action.Submit' is currently not supported
  *
  * @see https://docs.microsoft.com/en-us/microsoftteams/platform/webhooks-and-connectors/how-to/connectors-using#send-adaptive-cards-using-an-incoming-webhook
  *
- * @todo add "speak" property
- * @todo add "lang" property
- * @todo add "backgroundImage" property
- * @todo add "minHeight" property
- * @todo add "fallbackText" property
- * @todo add "verticalContentAlignment" property
- * @todo add "selectAction" property
+ * @todo add 'speak' property
+ * @todo add 'lang' property
+ * @todo add 'backgroundImage' property
+ * @todo add 'minHeight' property
+ * @todo add 'fallbackText' property
+ * @todo add 'verticalContentAlignment' property
+ * @todo add 'selectAction' property
  */
 class CustomAdaptiveCard extends Card
 {
@@ -31,7 +31,7 @@ class CustomAdaptiveCard extends Card
 
     /**
      * The body of the card is made up of building-blocks known as elements.
-     * "Elements" can be composed in nearly infinite arrangements to create many types of cards
+     * 'Elements' can be composed in nearly infinite arrangements to create many types of cards
      * Type: Array of Elements
      * @var array
      */
@@ -40,7 +40,7 @@ class CustomAdaptiveCard extends Card
     /**
      * Many cards have a set of actions a user may take on it.
      * This property describes those actions
-     * which typically get rendered in an "action bar" at the bottom.
+     * which typically get rendered in an 'action bar' at the bottom.
      * Type: Array of action objects
      * @var array
      */
@@ -48,8 +48,13 @@ class CustomAdaptiveCard extends Card
 
     private $supportedVersions = [1.0, 1.1, 1.2];
 
-    public function __construct($version = 1.2)
+    /**
+     * @param float $version
+     */
+    public function __construct(float $version = 1.2)
     {
+        parent::__construct();
+
         if (in_array($version, $this->supportedVersions)) {
             $this->version = $version;
         } else {
@@ -60,32 +65,30 @@ class CustomAdaptiveCard extends Card
     /**
      * Formats data for API call
      */
-    public function getMessage()
+    public function jsonSerialize()
     {
         $card = [
-            "contentType" => "application/vnd.microsoft.card.adaptive",
-            "contentUrl" => null,
-            "content" => [
-                "\$schema" => "http://adaptivecards.io/schemas/adaptive-card.json",
-                "type" => "AdaptiveCard",
-                "version" => $this->version,
+            'contentType' => 'application/vnd.microsoft.card.adaptive',
+            'contentUrl' => null,
+            'content' => [
+                '\$schema' => 'http://adaptivecards.io/schemas/adaptive-card.json',
+                'type' => 'AdaptiveCard',
+                'version' => $this->version,
             ],
         ];
 
         if (isset($this->body)) {
-            $card["content"]["body"] = $this->body;
+            $card['content']['body'] = $this->body;
         }
 
         if (isset($this->actions)) {
-            $card["content"]["actions"] = $this->actions;
+            $card['content']['actions'] = $this->actions;
         }
 
-        $message = [
-            "type" => "message",
-            "attachments" => [$card],
+        return [
+            'type' => 'message',
+            'attachments' => [$card],
         ];
-
-        return $message;
     }
 
     /**
@@ -94,13 +97,15 @@ class CustomAdaptiveCard extends Card
      * @param AdaptiveCardElement $element
      * @return CustomAdaptiveCard
      */
-    public function addElement(AdaptiveCardElement $element)
+    public function addElement(AdaptiveCardElement $element): self
     {
         if (!isset($this->body)) {
             $this->body = [];
         }
 
-        $this->body[] = $element->getContent($this->version);
+        $element->setVersion($this->version);
+
+        $this->body[] = $element;
 
         return $this;
     }
@@ -108,16 +113,18 @@ class CustomAdaptiveCard extends Card
     /**
      * Adds single action to card actions
      *
-     * @param AdaptiveCardAction $value
+     * @param AdaptiveCardAction $action
      * @return CustomAdaptiveCard
      */
-    public function addAction(AdaptiveCardAction $action)
+    public function addAction(AdaptiveCardAction $action): self
     {
         if (!isset($this->actions)) {
             $this->actions = [];
         }
 
-        $this->actions[] = $action->getContent($this->version);
+        $action->setVersion($this->version);
+
+        $this->actions[] = $action;
 
         return $this;
     }

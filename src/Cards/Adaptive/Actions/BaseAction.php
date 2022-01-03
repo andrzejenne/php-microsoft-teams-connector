@@ -5,8 +5,8 @@ namespace Sebbmyr\Teams\Cards\Adaptive\Actions;
 /**
  * Base action
  *
- * @todo add "fallback" property support
- * @todo add "requires" property support
+ * @todo add 'fallback' property support
+ * @todo add 'requires' property support
  */
 class BaseAction
 {
@@ -77,28 +77,28 @@ class BaseAction
     {
         // if type is not set, throw exception
         if (!isset($this->type)) {
-            throw new \Exception("Card action type is not set", 500);
+            throw new \Exception('Card action type is not set', 500);
         }
-        $action["type"] = $this->type;
+        $action['type'] = $this->type;
 
         if (isset($this->title) && $version >= 1.0) {
-            $action["title"] = $this->title;
+            $action['title'] = $this->title;
         }
 
         if (isset($this->iconUrl) && $version >= 1.1) {
-            $action["iconUrl"] = $this->iconUrl;
+            $action['iconUrl'] = $this->iconUrl;
         }
 
         if (isset($this->style) && $version >= 1.2) {
-            $action["style"] = $this->style;
+            $action['style'] = $this->style;
         }
 
         if (isset($this->fallback) && $version >= 1.2) {
-            $action["fallback"] = $this->fallback;
+            $action['fallback'] = $this->fallback;
         }
 
         if (isset($this->requires) && $version >= 1.2) {
-            $action["requires"] = $this->requires;
+            $action['requires'] = $this->requires;
         }
 
         return $action;

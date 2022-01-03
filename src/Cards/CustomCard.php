@@ -59,11 +59,11 @@ class CustomCard implements TeamsConnectorInterface
     /**
      * Formats data for API call
      */
-    public function getMessage()
+    public function jsonSerialize()
     {
         $message = [
-            "@type" => "MessageCard",
-            "@context" => "http://schema.org/extensions",
+            '@type' => 'MessageCard',
+            '@context' => 'http://schema.org/extensions',
         ];
         if (isset($this->summary)) {
             $message['summary'] = $this->summary;
@@ -94,7 +94,7 @@ class CustomCard implements TeamsConnectorInterface
      * @param string $title
      * @return CustomCard
      */
-    public function setTitle($title)
+    public function setTitle(string $title): self
     {
         $this->title = $title;
 
@@ -107,7 +107,7 @@ class CustomCard implements TeamsConnectorInterface
      * @param string $text
      * @return CustomCard
      */
-    public function setText($text)
+    public function setText(string $text): self
     {
         $this->text = $text;
 
@@ -120,7 +120,7 @@ class CustomCard implements TeamsConnectorInterface
      * @param string $summary
      * @return CustomCard
      */
-    public function setSummary($summary)
+    public function setSummary(string $summary): self
     {
         $this->summary = $summary;
 
@@ -133,7 +133,7 @@ class CustomCard implements TeamsConnectorInterface
      * @param string $color
      * @return CustomCard
      */
-    public function setColor($color)
+    public function setColor(string $color): self
     {
         $this->color = $color;
 
@@ -148,16 +148,19 @@ class CustomCard implements TeamsConnectorInterface
      * @param string|null $image
      * @return CustomCard
      */
-    public function addActivity($text, $title = null, $image = null)
+    public function addActivity(string $text, string $title = null, string $image = null): self
     {
-        $activity = ['activityTitle' => $title];
-        if ($text !== null) {
-            $activity['activityText'] = $text;
+        $data = [
+            'activityText' => $text,
+        ];
+
+        if ($title) {
+            $data['activityTitle'] = $title;
         }
-        if ($image !== null) {
-            $activity['activityImage'] = $image;
+        if ($image) {
+            $data['activityImage'] = $image;
         }
-        $this->sections[] = $activity;
+        $this->sections[] = $data;
 
         return $this;
     }
@@ -169,7 +172,7 @@ class CustomCard implements TeamsConnectorInterface
      * @param array|null $array
      * @return CustomCard
      */
-    public function addFactsText($title, array $array = null)
+    public function addFactsText(string $title, array $array = null): self
     {
         $section = ['title' => $title];
         if (!is_null($array)) {
@@ -192,7 +195,7 @@ class CustomCard implements TeamsConnectorInterface
      * @param array $array
      * @return CustomCard
      */
-    public function addFacts($title, array $array)
+    public function addFacts(string $title, array $array): self
     {
         $section = ['title' => $title];
         $facts = [];
@@ -213,7 +216,7 @@ class CustomCard implements TeamsConnectorInterface
      * @param string $image
      * @return CustomCard
      */
-    public function addImage($title, string $image)
+    public function addImage(string $title, string $image): self
     {
         $this->addImages($title, [$image]);
 
@@ -227,7 +230,7 @@ class CustomCard implements TeamsConnectorInterface
      * @param array $images
      * @return CustomCard
      */
-    public function addImages($title, array $images)
+    public function addImages(string $title, array $images): self
     {
         $section = ['title' => $title];
         $sectionImages = [];
@@ -247,7 +250,7 @@ class CustomCard implements TeamsConnectorInterface
      * @param string $url
      * @return CustomCard
      */
-    public function addAction($text, $url)
+    public function addAction(string $text, string $url): self
     {
         $this->potentialAction[] = [
             '@context' => 'http://schema.org',

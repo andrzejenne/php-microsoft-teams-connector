@@ -39,19 +39,21 @@ class AdaptiveCard implements AdaptiveCardElement
     
     public function __construct()
     {
-        $this->setType("AdaptiveCard");
+        $this->setType('AdaptiveCard');
     }
 
     /**
      * Returns content of card element
-     * @param  float $version
+     *
+     * @param float $version
      * @return array
+     * @throws \Exception
      */
-    public function getContent($version)
+    public function getContent(float $version): array
     {
         // if type is not set, throw exception
         if (!isset($this->type)) {
-            throw new \Exception("Card element type is not set", 500);
+            throw new \Exception('Card element type is not set', 500);
         }
 
         $element = [
@@ -59,11 +61,11 @@ class AdaptiveCard implements AdaptiveCardElement
         ];
 
         if (isset($this->body) && $version >= 1.0) {
-            $element["body"] = $this->getBodyContent($version);
+            $element['body'] = $this->getBodyContent($version);
         }
 
         if (isset($this->actions) && $version >= 1.0) {
-            $element["actions"] = $this->getActionsContent($version);
+            $element['actions'] = $this->getActionsContent($version);
         }
 
 
@@ -75,7 +77,7 @@ class AdaptiveCard implements AdaptiveCardElement
      * @param  float $version
      * @return array
      */
-    private function getBodyContent($version)
+    private function getBodyContent(float $version): array
     {
         $body = [];
 
@@ -111,7 +113,7 @@ class AdaptiveCard implements AdaptiveCardElement
      * @param string $type
      * @return AdaptiveCard
      */
-    public function setType($type)
+    public function setType(string $type): self
     {
         $this->type = $type;
 
@@ -123,7 +125,7 @@ class AdaptiveCard implements AdaptiveCardElement
      * @param AdaptiveCardElement $element
      * @return AdaptiveCard
      */
-    public function addElement(AdaptiveCardElement $element)
+    public function addElement(AdaptiveCardElement $element): self
     {
         if (!isset($this->body)) {
             $this->body = [];
@@ -139,7 +141,7 @@ class AdaptiveCard implements AdaptiveCardElement
      * @param AdaptiveCardAction $action
      * @return AdaptiveCard
      */
-    public function addAction(AdaptiveCardAction $action)
+    public function addAction(AdaptiveCardAction $action): self
     {
         if (!isset($this->actions)) {
             $this->actions = [];

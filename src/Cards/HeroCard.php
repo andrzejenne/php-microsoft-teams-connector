@@ -7,7 +7,7 @@ use Sebbmyr\Teams\AbstractCard as Card;
 /**
  * Hero card for microsoft teams
  *
- * "tap" property is currently not supported
+ * 'tap' property is currently not supported
  *
  * @see https://docs.microsoft.com/en-us/microsoftteams/platform/task-modules-and-cards/cards/cards-reference#hero-card
  */
@@ -50,39 +50,37 @@ class HeroCard extends Card
      */
     private $buttons;
 
-    public function getMessage()
+    public function jsonSerialize()
     {
         $card = [
-            "contentType" => "application/vnd.microsoft.card.hero",
-            "content" => [],
+            'contentType' => 'application/vnd.microsoft.card.hero',
+            'content' => [],
         ];
 
         if (isset($this->title)) {
-            $card["content"]["title"] = $this->title;
+            $card['content']['title'] = $this->title;
         }
 
         if (isset($this->subtitle)) {
-            $card["content"]["subtitle"] = $this->subtitle;
+            $card['content']['subtitle'] = $this->subtitle;
         }
 
         if (isset($this->text)) {
-            $card["content"]["text"] = $this->text;
+            $card['content']['text'] = $this->text;
         }
 
         if (isset($this->images)) {
-            $card["content"]["images"] = $this->images;
+            $card['content']['images'] = $this->images;
         }
 
         if (isset($this->buttons)) {
-            $card["content"]["buttons"] = $this->buttons;
+            $card['content']['buttons'] = $this->buttons;
         }
 
-        $message = [
-            "type" => "message",
-            "attachments" => [$card],
+        return [
+            'type' => 'message',
+            'attachments' => [$card],
         ];
-
-        return $message;
     }
 
     /**
@@ -91,7 +89,7 @@ class HeroCard extends Card
      * @param string $title
      * @return HeroCard
      */
-    public function setTitle($title)
+    public function setTitle(string $title): self
     {
         $this->title = $title;
 
@@ -104,7 +102,7 @@ class HeroCard extends Card
      * @param string $text
      * @return HeroCard
      */
-    public function setText($text)
+    public function setText(string $text): self
     {
         $this->text = $text;
 
@@ -117,7 +115,7 @@ class HeroCard extends Card
      * @param string $subtitle
      * @return HeroCard
      */
-    public function setSubtitle($subtitle)
+    public function setSubtitle(string $subtitle): self
     {
         $this->subtitle = $subtitle;
 
@@ -131,13 +129,13 @@ class HeroCard extends Card
      * @param string $url
      * @return HeroCard
      */
-    public function addImage($url)
+    public function addImage(string $url): self
     {
         if (!isset($this->images)) {
             $this->images = [];
         }
         $this->images[] = [
-            "url" => $url,
+            'url' => $url,
         ];
 
         return $this;
@@ -149,17 +147,18 @@ class HeroCard extends Card
      * @param string $type
      * @param string $title
      * @param string $value
+     * @return HeroCard
      */
-    public function addButton($type, $title, $value)
+    public function addButton(string $type, string $title, string $value)
     {
         if (!isset($this->buttons)) {
             $this->buttons = [];
         }
 
         $this->buttons[] = [
-            "type" => $type,
-            "title" => $title,
-            "value" => $value,
+            'type' => $type,
+            'title' => $title,
+            'value' => $value,
         ];
 
         return $this;

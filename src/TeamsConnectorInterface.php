@@ -2,13 +2,7 @@
 
 namespace Sebbmyr\Teams;
 
-interface TeamsConnectorInterface
+interface TeamsConnectorInterface extends \JsonSerializable
 {
 
-    /**
-     * Returns message card array
-     *
-     * @return array
-     */
-    public function getMessage();
 }

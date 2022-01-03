@@ -7,9 +7,10 @@ namespace Sebbmyr\Teams;
  */
 class TeamsConnector
 {
+    /** @var string */
     private $webhookUrl;
 
-    public function __construct($webhookUrl)
+    public function __construct(string $webhookUrl)
     {
         $this->webhookUrl = $webhookUrl;
     }
@@ -20,9 +21,9 @@ class TeamsConnector
      * @param  TeamsConnectorInterface $card
      * @param  int $curlOptTimeout by default = 10
      * @param  int $curlOptConnectTimeout by default = 3
-     * @throws Exception
+     * @throws \Exception
      */
-    public function send(TeamsConnectorInterface $card, $curlOptTimeout = 10, $curlOptConnectTimeout = 3)
+    public function send(TeamsConnectorInterface $card, int $curlOptTimeout = 10, int $curlOptConnectTimeout = 3)
     {
         $json = json_encode($card->getMessage());
 

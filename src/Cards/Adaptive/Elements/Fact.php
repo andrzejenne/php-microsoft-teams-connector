@@ -2,13 +2,15 @@
 
 namespace Sebbmyr\Teams\Cards\Adaptive\Elements;
 
+use Sebbmyr\Teams\Cards\Adaptive\AbstractElement;
+
 /**
  * Fact
  *
  * @version >= 1.0
  * @see https://adaptivecards.io/explorer/Fact.html
  */
-class Fact
+class Fact extends AbstractElement
 {
 
     /**
@@ -26,20 +28,28 @@ class Fact
      * @var string
      */
     private $value;
-    
-    public function __construct($title, $value)
+
+    /**
+     * @param string $title
+     * @param string $value
+     */
+    public function __construct(string $title, string $value)
     {
+        parent::__construct('Fact');
+
         $this->title = $title;
         $this->value = $value;
     }
 
     /**
      * Return fact content
+     *
      * @return array
+     * @throws \Exception
      */
-    public function getContent()
+    public function jsonSerialize()
     {
-        return [
+        return parent::jsonSerialize() + [
             'title' => $this->title,
             'value' => $this->value,
         ];

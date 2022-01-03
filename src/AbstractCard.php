@@ -21,6 +21,9 @@ abstract class AbstractCard implements TeamsConnectorInterface
      * Returns message card array
      *
      * @return array
+     * @deprecated
      */
-    abstract public function getMessage();
+    public function getMessage(): array {
+        return $this->jsonSerialize();
+    }
 }

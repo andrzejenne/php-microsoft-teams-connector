@@ -2,17 +2,19 @@
 
 namespace Sebbmyr\Teams\Cards\Adaptive\Elements;
 
+use Sebbmyr\Teams\Cards\Adaptive\AbstractElement;
+
 /**
  * Image element
  *
- * "selectAction" property is currently not support
+ * 'selectAction' property is currently not support
  *
- * @todo add checks to predefined styles, e.g. BlockElementHeight "auto" and "stretch"
- * @todo add "selectAction" property support
+ * @todo add checks to predefined styles, e.g. BlockElementHeight 'auto' and 'stretch'
+ * @todo add 'selectAction' property support
  *
  * @see https://adaptivecards.io/explorer/Image.html
  */
-class Image extends BaseElement implements AdaptiveCardElement
+class Image extends AbstractElement
 {
     /**
      * The URL to the image. Supports data URI in version 1.2+
@@ -43,7 +45,7 @@ class Image extends BaseElement implements AdaptiveCardElement
      * ending in ‘px’, E.g., 50px, the image will distort to fit
      * that exact height. This overrides the size property.
      * Type: string, BlockElementHeight
-     * Default: "auto"
+     * Default: 'auto'
      * Required: no
      * @version 1.1
      * @var string
@@ -60,8 +62,8 @@ class Image extends BaseElement implements AdaptiveCardElement
     private $horizontalAlignment;
 
     /**
-     * An Action that will be invoked when the "Image" is tapped or selected.
-     * "Action.ShowCard" is not supported.
+     * An Action that will be invoked when the 'Image' is tapped or selected.
+     * 'Action.ShowCard' is not supported.
      * Type: ISelectAction
      * Required: no
      * @version 1.1
@@ -79,7 +81,7 @@ class Image extends BaseElement implements AdaptiveCardElement
     private $size;
 
     /**
-     * Controls how this "Image" is displayed.
+     * Controls how this 'Image' is displayed.
      * Type: ImageStyle
      * Required: no
      * @version 1.0
@@ -98,59 +100,58 @@ class Image extends BaseElement implements AdaptiveCardElement
 
     public function __construct($url = null)
     {
-        $this->setType("Image");
+        parent::__construct('Image');
+
         $this->url = $url;
     }
 
     /**
      * Returns content of card element
-     * @param  float $version
+     *
      * @return array
+     * @throws \Exception
      */
-    public function getContent($version)
+    public function jsonSerialize()
     {
         // if url is not set, throw exception
         if (!isset($this->url)) {
-            throw new \Exception("Card element url is not set", 500);
-        }
-        $element = $this->getBaseContent(
-            ["url" => $this->url],
-            $version
-        );
-
-        if (isset($this->altText) && $version >= 1.0) {
-            $element["altText"] = $this->altText;
+            throw new \Exception('Card element url is not set', 500);
         }
 
-        if (isset($this->backgroundColor) && $version >= 1.1) {
-            $element["backgroundColor"] = $this->backgroundColor;
+        $data = parent::jsonSerialize() +
+            ['url' => $this->url];
+
+        if ($this->version >= 1.0) {
+            if (isset($this->altText)) {
+                $data['altText'] = $this->altText;
+            }
+            if (isset($this->horizontalAlignment)) {
+                $data['horizontalAlignment'] = $this->horizontalAlignment;
+            }
+            if (isset($this->size)) {
+                $data['size'] = $this->size;
+            }
+            if (isset($this->style)) {
+                $data['style'] = $this->style;
+            }
         }
 
-        if (isset($this->height) && $version >= 1.1) {
-            $element["height"] = $this->height;
+        if ($this->version >= 1.1) {
+            if (isset($this->backgroundColor)) {
+                $data['backgroundColor'] = $this->backgroundColor;
+            }
+            if (isset($this->height)) {
+                $data['height'] = $this->height;
+            }
+            if (isset($this->selectAction)) {
+                $data['selectAction'] = $this->selectAction;
+            }
+            if (isset($this->width)) {
+                $data['width'] = $this->width;
+            }
         }
 
-        if (isset($this->horizontalAlignment) && $version >= 1.0) {
-            $element["horizontalAlignment"] = $this->horizontalAlignment;
-        }
-
-        if (isset($this->selectAction) && $version >= 1.1) {
-            $element["selectAction"] = $this->selectAction;
-        }
-
-        if (isset($this->size) && $version >= 1.0) {
-            $element["size"] = $this->size;
-        }
-
-        if (isset($this->style) && $version >= 1.0) {
-            $element["style"] = $this->style;
-        }
-
-        if (isset($this->width) && $version >= 1.1) {
-            $element["width"] = $this->width;
-        }
-
-        return $element;
+        return $data;
     }
 
     /**
@@ -158,7 +159,7 @@ class Image extends BaseElement implements AdaptiveCardElement
      * @param string $url
      * @return Image
      */
-    public function setUrl($url)
+    public function setUrl(string $url): self
     {
         $this->url = $url;
 
@@ -170,7 +171,7 @@ class Image extends BaseElement implements AdaptiveCardElement
      * @param string $altText
      * @return Image
      */
-    public function setAltText($altText)
+    public function setAltText(string $altText): self
     {
         $this->altText = $altText;
 
@@ -182,7 +183,7 @@ class Image extends BaseElement implements AdaptiveCardElement
      * @param string $backgroundColor
      * @return Image
      */
-    public function setBackgroundColor($backgroundColor)
+    public function setBackgroundColor(string $backgroundColor): self
     {
         $this->backgroundColor = $backgroundColor;
 
@@ -193,7 +194,7 @@ class Image extends BaseElement implements AdaptiveCardElement
      * Sets height. Available options can be found in Styles.php
      * @param string $height [description]
      */
-    public function setHeight($height)
+    public function setHeight(string $height): self
     {
         $this->height = $height;
 
@@ -205,7 +206,7 @@ class Image extends BaseElement implements AdaptiveCardElement
      * @param string $alignment
      * @return Image
      */
-    public function setHorizontalAlignment($alignment)
+    public function setHorizontalAlignment(string $alignment): self
     {
         $this->horizontalAlignment = $alignment;
 
@@ -217,7 +218,7 @@ class Image extends BaseElement implements AdaptiveCardElement
      * @param string $size
      * @return Image
      */
-    public function setSize($size)
+    public function setSize(string $size): self
     {
         $this->size = $size;
 
@@ -229,7 +230,7 @@ class Image extends BaseElement implements AdaptiveCardElement
      * @param string $style
      * @return Image
      */
-    public function setStyle($style)
+    public function setStyle(string $style): self
     {
         $this->style = $style;
 
@@ -241,7 +242,7 @@ class Image extends BaseElement implements AdaptiveCardElement
      * @param string $width [description]
      * @return Image
      */
-    public function setWidth($width)
+    public function setWidth(string $width): self
     {
         $this->width = $width;
 

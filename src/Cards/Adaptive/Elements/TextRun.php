@@ -2,13 +2,15 @@
 
 namespace Sebbmyr\Teams\Cards\Adaptive\Elements;
 
+use Sebbmyr\Teams\Cards\Adaptive\AbstractElement;
+
 /**
  * TextRun  element
  *
  * @version >= 1.2
  * @see https://adaptivecards.io/explorer/TextRun.html
  */
-class TextRun implements AdaptiveCardElement
+class TextRun extends AbstractElement
 {
     /**
      * Type of element.
@@ -72,8 +74,8 @@ class TextRun implements AdaptiveCardElement
     private $italic;
 
     /**
-     * An Action that will be invoked when the "Image" is tapped or selected.
-     * "Action.ShowCard" is not supported.
+     * An Action that will be invoked when the 'Image' is tapped or selected.
+     * 'Action.ShowCard' is not supported.
      * Type: ISelectAction
      * Required: no
      * @version 1.2
@@ -117,68 +119,70 @@ class TextRun implements AdaptiveCardElement
 
     public function __construct($text = null)
     {
-        $this->setType("TextRun");
+        $this->setType('TextRun');
         $this->text = $text;
     }
 
     /**
      * Returns content of card element
-     * @param  float $version
+     *
+     * @param float $version
      * @return array
+     * @throws \Exception
      */
-    public function getContent($version)
+    public function getContent(float $version): array
     {
         // if type is not set, throw exception
         if (!isset($this->type)) {
-            throw new \Exception("Card element type is not set", 500);
+            throw new \Exception('Card element type is not set', 500);
         }
         // if text is not set, throw exception
         if (!isset($this->text)) {
-            throw new \Exception("Card element text is not set", 500);
+            throw new \Exception('Card element text is not set', 500);
         }
         $element = [
-            "text" => $this->text,
-            "type" => $this->type,
+            'text' => $this->text,
+            'type' => $this->type,
         ];
 
-        if (isset($this->color) && $version >= 1.2) {
-            $element["color"] = $this->color;
-        }
+        if ($version >= 1.2) {
+            if (isset($this->color)) {
+                $element['color'] = $this->color;
+            }
 
-        if (isset($this->fontType) && $version >= 1.2) {
-            $element["fontType"] = $this->fontType;
-        }
+            if (isset($this->fontType)) {
+                $element['fontType'] = $this->fontType;
+            }
 
-        if (isset($this->highlight) && $version >= 1.2) {
-            $element["highlight"] = $this->highlight;
-        }
+            if (isset($this->highlight)) {
+                $element['highlight'] = $this->highlight;
+            }
 
-        if (isset($this->isSubtle) && $version >= 1.2) {
-            $element["isSubtle"] = $this->isSubtle;
-        }
+            if (isset($this->isSubtle)) {
+                $element['isSubtle'] = $this->isSubtle;
+            }
 
-        if (isset($this->italic) && $version >= 1.2) {
-            $element["italic"] = $this->italic;
-        }
+            if (isset($this->italic)) {
+                $element['italic'] = $this->italic;
+            }
 
-        if (isset($this->selectAction) && $version >= 1.2) {
-            $element["selectAction"] = $this->selectAction;
-        }
+            if (isset($this->selectAction)) {
+                $element['selectAction'] = $this->selectAction;
+            }
 
-        if (isset($this->size) && $version >= 1.2) {
-            $element["size"] = $this->size;
-        }
+            if (isset($this->size)) {
+                $element['size'] = $this->size;
+            }
 
-        if (isset($this->strikethrough) && $version >= 1.2) {
-            $element["strikethrough"] = $this->strikethrough;
-        }
-
-        if (isset($this->underline) && $version >= 1.3) {
-            $element["underline"] = $this->underline;
-        }
-
-        if (isset($this->weight) && $version >= 1.2) {
-            $element["weight"] = $this->weight;
+            if (isset($this->strikethrough)) {
+                $element['strikethrough'] = $this->strikethrough;
+            }
+            if (isset($this->weight)) {
+                $element['weight'] = $this->weight;
+            }
+            if (isset($this->underline) && $version >= 1.3) {
+                $element['underline'] = $this->underline;
+            }
         }
 
         return $element;
@@ -189,7 +193,7 @@ class TextRun implements AdaptiveCardElement
      * @param string $type
      * @return TextRun
      */
-    public function setType($type)
+    public function setType(string $type): self
     {
         $this->type = $type;
 
@@ -201,7 +205,7 @@ class TextRun implements AdaptiveCardElement
      * @param string $text
      * @return TextRun
      */
-    public function setText($text)
+    public function setText(string $text): self
     {
         $this->text = $text;
 
@@ -213,7 +217,7 @@ class TextRun implements AdaptiveCardElement
      * @param string $color
      * @return TextRun
      */
-    public function setColor($color)
+    public function setColor(string $color): self
     {
         $this->color = $color;
 
@@ -225,7 +229,7 @@ class TextRun implements AdaptiveCardElement
      * @param string $fontType
      * @return TextRun
      */
-    public function setFontType($fontType)
+    public function setFontType(string $fontType): self
     {
         $this->fontType = $fontType;
 

@@ -12,10 +12,10 @@ namespace Sebbmyr\Teams\Cards\Adaptive\Elements;
  * @version 1.1
  * @see https://adaptivecards.io/explorer/MediaSource.html
  */
-class MediaSource implements AdaptiveCardElement
+class MediaSource implements \JsonSerializable
 {
     /**
-     * Mime type of associated media (e.g. "video/mp4").
+     * Mime type of associated media (e.g. 'video/mp4').
      * Required: yes
      * @version
      * @var string
@@ -31,7 +31,7 @@ class MediaSource implements AdaptiveCardElement
     private $url;
 
     
-    public function __construct($mimeType = null, $url = null)
+    public function __construct(?string $mimeType = null, ?string $url = null)
     {
         $this->mimeType = $mimeType;
         $this->url = $url;
@@ -39,21 +39,22 @@ class MediaSource implements AdaptiveCardElement
 
     /**
      * Returns content of card element
-     * @param  float $version
+     *
      * @return array
+     * @throws \Exception
      */
-    public function getContent($version)
+    public function jsonSerialize()
     {
         if (!isset($this->mimeType)) {
-            throw new \Exception("Card element mime type is not set", 500);
+            throw new \Exception('Card element mime type is not set', 500);
         }
         if (!isset($this->url)) {
-            throw new \Exception("Card element url is not set", 500);
+            throw new \Exception('Card element url is not set', 500);
         }
 
         return [
-            "mimeType" => $this->mimeType,
-            "url" => $this->url,
+            'mimeType' => $this->mimeType,
+            'url' => $this->url,
         ];
     }
 
@@ -62,7 +63,7 @@ class MediaSource implements AdaptiveCardElement
      * @param string $mimeType
      * @return MediaSource
      */
-    public function setMimeType($mimeType)
+    public function setMimeType(string $mimeType): self
     {
         $this->mimeType = $mimeType;
 
@@ -74,7 +75,7 @@ class MediaSource implements AdaptiveCardElement
      * @param string $url
      * @return MediaSource
      */
-    public function setUrl($url)
+    public function setUrl(string $url): self
     {
         $this->url = $url;
 

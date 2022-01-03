@@ -2,7 +2,7 @@
 
 namespace Sebbmyr\Teams\Cards\Adaptive\Actions;
 
-use Sebbmyr\Teams\Cards\Adaptive\AdaptiveCard;
+use Sebbmyr\Teams\Cards\Adaptive\Elements\AdaptiveCard;
 use Sebbmyr\Teams\Cards\Adaptive\Elements\AdaptiveCardElement;
 
 /**
@@ -15,7 +15,7 @@ class ShowCard extends BaseAction implements AdaptiveCardAction
     
     public function __construct()
     {
-        $this->setType("Action.ShowCard");
+        $this->setType('Action.ShowCard');
         $this->card = new AdaptiveCard();
     }
 
@@ -27,7 +27,7 @@ class ShowCard extends BaseAction implements AdaptiveCardAction
     public function getContent($version)
     {
         $action = $this->getBaseContent(
-            ["card" => $this->card->getContent($version)],
+            ['card' => $this->card->getContent($version)],
             $version
         );
 

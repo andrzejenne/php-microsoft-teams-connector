@@ -30,7 +30,7 @@ class RichTextBlock extends BaseElement implements AdaptiveCardElement
     
     public function __construct($inlines = null)
     {
-        $this->setType("RichTextBlock");
+        $this->setType('RichTextBlock');
         $this->inlines = $inlines;
     }
 
@@ -43,16 +43,16 @@ class RichTextBlock extends BaseElement implements AdaptiveCardElement
     {
         // if inlines is not set, throw exception
         if (!isset($this->inlines)) {
-            throw new \Exception("Card element inlines is not set", 500);
+            throw new \Exception('Card element inlines is not set', 500);
         }
 
         $element = $this->getBaseContent(
-            ["inlines" => $this->getInlinesContent($version)],
+            ['inlines' => $this->getInlinesContent($version)],
             $version
         );
 
         if (isset($this->horizontalAlignment) && $version >= 1.2) {
-            $element["horizontalAlignment"] = $this->horizontalAlignment;
+            $element['horizontalAlignment'] = $this->horizontalAlignment;
         }
 
         return $element;

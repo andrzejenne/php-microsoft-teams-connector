@@ -1,5 +1,5 @@
 {
-    "name": "sebbmeyer/php-microsoft-teams-connector",
+    "name": "heczkoa/php-ms-teams-connector",
     "description": "PHP Microsoft Teams Connector",
     "keywords": ["teams", "microsoft", "connectors", "connector", "messagecard", "php"],
     "license": "MIT",
@@ -7,10 +7,16 @@
         {
             "name": "Sebastian Meyer",
             "email": "sebbmyr@gmail.com"
+        },
+        {
+            "name": "Andrzej Heczko",
+            "email": "andrzej.heczko@gmail.com"
         }
     ],
     "require": {
-        "php": ">=5.4.0"
+        "php": ">=7.2.0",
+        "ext-json": "*",
+        "ext-curl": "*"
     },
     "autoload": {
         "psr-4": {
