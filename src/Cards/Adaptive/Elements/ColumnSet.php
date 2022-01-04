@@ -7,7 +7,6 @@ use Sebbmyr\Teams\Cards\Adaptive\Traits\HasBleed;
 use Sebbmyr\Teams\Cards\Adaptive\Traits\HasHorizontalAlignment;
 use Sebbmyr\Teams\Cards\Adaptive\Traits\HasMinHeight;
 use Sebbmyr\Teams\Cards\Adaptive\Traits\HasStyle;
-use Sebbmyr\Teams\Cards\Adaptive\Traits\HasVersion;
 
 /**
  * ColumnSet element
@@ -16,7 +15,7 @@ use Sebbmyr\Teams\Cards\Adaptive\Traits\HasVersion;
  */
 class ColumnSet extends AbstractElement
 {
-    use HasBleed, HasStyle, HasMinHeight, HasHorizontalAlignment, HasVersion;
+    use HasBleed, HasStyle, HasMinHeight, HasHorizontalAlignment;
 
     /**
      * The array of Fact's.
