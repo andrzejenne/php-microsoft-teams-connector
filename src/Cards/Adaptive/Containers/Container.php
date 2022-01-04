@@ -48,10 +48,13 @@ class Container extends AbstractElement
 
     /**
      * @param AdaptiveCardElement $element
+     * @return $this
      */
-    public function addItem(AdaptiveCardElement $element)
+    public function addItem(AdaptiveCardElement $element): self
     {
         $this->items[] = $element;
+
+        return $this;
     }
 
     /**
