@@ -14,10 +14,12 @@ trait HasVersion
 
     /**
      * @param float $version
-     * @return void
+     * @return $this
      */
-    final public function setVersion(float $version)
+    final public function setVersion(float $version): self
     {
         $this->version = $version;
+
+        return $this;
     }
 }
