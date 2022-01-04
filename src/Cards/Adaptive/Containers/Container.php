@@ -54,6 +54,8 @@ class Container extends AbstractElement
     {
         $this->items[] = $element;
 
+        $element->setVersion($this->version);
+
         return $this;
     }
 
