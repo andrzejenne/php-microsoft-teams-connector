@@ -9,14 +9,14 @@ use Sebbmyr\Teams\AbstractCard as Card;
  */
 class BaseAdaptiveCard extends Card
 {
-    
+
     public function jsonSerialize()
     {
         $card = [
             'contentType' => 'application/vnd.microsoft.card.adaptive',
             'contentUrl' => null,
             'content' => [
-                '\$schema' => 'http://adaptivecards.io/schemas/adaptive-card.json',
+                '$schema' => 'http://adaptivecards.io/schemas/adaptive-card.json',
                 'type' => 'AdaptiveCard',
                 'version' => '1.2',
             ],
@@ -37,7 +37,7 @@ class BaseAdaptiveCard extends Card
             if (!in_array($key, $acceptedKeys)) {
                 continue;
             }
-            
+
             $card['content'][$key] = $value;
         }
 
