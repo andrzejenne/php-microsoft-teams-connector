@@ -7,23 +7,22 @@ namespace Sebbmyr\Teams\Cards\Adaptive\Traits;
 
 use Sebbmyr\Teams\Cards\Adaptive\Elements\ColumnSet;
 
-trait HasBleed
+trait HasSeparator
 {
     /**
      * @var bool
-     * @version "1.2"
      *
-     * Determines whether the element should bleed through its parent's padding.
+     * "When `true`, draw a separating line between this column and the previous column."
      */
-    private $bleed;
+    private $separator;
 
     /**
-     * @param bool $bleed
+     * @param bool $separator
      * @return $this
      */
-    public function setBleed(bool $bleed): self
+    public function setSeparator(bool $separator): self
     {
-        $this->bleed = $bleed;
+        $this->separator = $separator;
 
         return $this;
     }

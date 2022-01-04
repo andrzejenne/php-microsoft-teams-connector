@@ -18,8 +18,19 @@ class FactSet extends AbstractElement
      * @var array
      */
     private $facts;
-    
-    public function __construct($facts = null)
+
+    /**
+     * @return static
+     */
+    public static function create(array $facts = []): self
+    {
+        return new static($facts);
+    }
+
+    /**
+     * @param array $facts
+     */
+    public function __construct(array $facts)
     {
         parent::__construct('FactSet');
         $this->facts = $facts;

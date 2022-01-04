@@ -3,6 +3,7 @@
 namespace Sebbmyr\Teams\Cards\Adaptive\Elements;
 
 use Sebbmyr\Teams\Cards\Adaptive\AbstractElement;
+use Sebbmyr\Teams\Cards\Adaptive\Traits\HasHorizontalAlignment;
 
 /**
  * Text block element
@@ -13,6 +14,8 @@ use Sebbmyr\Teams\Cards\Adaptive\AbstractElement;
  */
 class TextBlock extends AbstractElement
 {
+    use HasHorizontalAlignment;
+
     /**
      * Text to display. A subset of markdown is supported (https://aka.ms/ACTextFeatures)
      * Required: yes
@@ -38,15 +41,6 @@ class TextBlock extends AbstractElement
      * @var string
      */
     private $fontType;
-
-    /**
-     * Controls the horizontal text alignment.
-     * Type: HorizontalAligment
-     * Required: no
-     * @version 1.0
-     * @var string
-     */
-    private $horizontalAlignment;
 
     /**
      * If true, displays text slightly toned down to appear less prominent.
@@ -92,6 +86,18 @@ class TextBlock extends AbstractElement
      */
     private $wrap;
 
+    /**
+     * @param string $text
+     * @return static
+     */
+    public static function create(string $text): self
+    {
+        return new static($text);
+    }
+
+    /**
+     * @param string|null $text
+     */
     public function __construct($text = null)
     {
         parent::__construct('TextBlock');
@@ -100,8 +106,8 @@ class TextBlock extends AbstractElement
 
     /**
      * Returns content of card element
-     * @param  float $version
      * @return array
+     * @throws \Exception
      */
     public function jsonSerialize()
     {
@@ -109,46 +115,44 @@ class TextBlock extends AbstractElement
         if (!isset($this->text)) {
             throw new \Exception('Card element text is not set', 500);
         }
-        $element = parent::jsonSerialize() +
+        $data = parent::jsonSerialize() +
             ['text' => $this->text];
-        
-        if ($this->version >= 1.0) {
 
-            if (isset($this->color) ) {
-                $element['color'] = $this->color;
-            }
 
-            if (isset($this->horizontalAlignment) ) {
-                $element['horizontalAlignment'] = $this->horizontalAlignment;
-            }
-
-            if (isset($this->isSubtle) ) {
-                $element['isSubtle'] = $this->isSubtle;
-            }
-
-            if (isset($this->maxLines) ) {
-                $element['maxLines'] = $this->maxLines;
-            }
-
-            if (isset($this->size) ) {
-                $element['size'] = $this->size;
-            }
-
-            if (isset($this->weight) ) {
-                $element['weight'] = $this->weight;
-            }
-
-            if (isset($this->wrap) ) {
-                $element['wrap'] = $this->wrap;
-            }
-
+        if (isset($this->color) ) {
+            $data['color'] = $this->color;
         }
+
+        if (isset($this->horizontalAlignment) ) {
+            $data['horizontalAlignment'] = $this->horizontalAlignment;
+        }
+
+        if (isset($this->isSubtle) ) {
+            $data['isSubtle'] = $this->isSubtle;
+        }
+
+        if (isset($this->maxLines) ) {
+            $data['maxLines'] = $this->maxLines;
+        }
+
+        if (isset($this->size) ) {
+            $data['size'] = $this->size;
+        }
+
+        if (isset($this->weight) ) {
+            $data['weight'] = $this->weight;
+        }
+
+        if (isset($this->wrap) ) {
+            $data['wrap'] = $this->wrap;
+        }
+
 
         if (isset($this->fontType) && $this->version >= 1.2) {
-            $element['fontType'] = $this->fontType;
+            $data['fontType'] = $this->fontType;
         }
 
-        return $element;
+        return $data;
     }
 
     /**
@@ -183,18 +187,6 @@ class TextBlock extends AbstractElement
     public function setFontType(string $fontType): self
     {
         $this->fontType = $fontType;
-
-        return $this;
-    }
-
-    /**
-     * Sets horizontal alignment. Available options can be found in Styles.php
-     * @param string $alignment
-     * @return TextBlock
-     */
-    public function setHorizontalAligment(string $alignment): self
-    {
-        $this->horizontalAlignment = $alignment;
 
         return $this;
     }

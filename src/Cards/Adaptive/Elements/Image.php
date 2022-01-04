@@ -50,7 +50,7 @@ class Image extends AbstractElement
      * @version 1.1
      * @var string
      */
-    private $height;
+    protected $height;
 
     /**
      * Controls the horizontal text alignment.
@@ -98,7 +98,18 @@ class Image extends AbstractElement
      */
     private $width;
 
-    public function __construct($url = null)
+    /**
+     * @return static
+     */
+    public static function create(string $url = null): self
+    {
+        return new static($url);
+    }
+
+    /**
+     * @param string|null $url
+     */
+    public function __construct(?string $url)
     {
         parent::__construct('Image');
 
@@ -121,19 +132,17 @@ class Image extends AbstractElement
         $data = parent::jsonSerialize() +
             ['url' => $this->url];
 
-        if ($this->version >= 1.0) {
-            if (isset($this->altText)) {
-                $data['altText'] = $this->altText;
-            }
-            if (isset($this->horizontalAlignment)) {
-                $data['horizontalAlignment'] = $this->horizontalAlignment;
-            }
-            if (isset($this->size)) {
-                $data['size'] = $this->size;
-            }
-            if (isset($this->style)) {
-                $data['style'] = $this->style;
-            }
+        if (isset($this->altText)) {
+            $data['altText'] = $this->altText;
+        }
+        if (isset($this->horizontalAlignment)) {
+            $data['horizontalAlignment'] = $this->horizontalAlignment;
+        }
+        if (isset($this->size)) {
+            $data['size'] = $this->size;
+        }
+        if (isset($this->style)) {
+            $data['style'] = $this->style;
         }
 
         if ($this->version >= 1.1) {

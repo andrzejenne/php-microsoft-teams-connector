@@ -3,6 +3,7 @@
 namespace Sebbmyr\Teams\Cards\Adaptive\Elements;
 
 use Sebbmyr\Teams\Cards\Adaptive\Actions\AdaptiveCardAction;
+use Sebbmyr\Teams\Cards\Adaptive\Traits\HasVersion;
 
 /**
  * AdaptiveCard to be used as inline element for Actions
@@ -11,6 +12,8 @@ use Sebbmyr\Teams\Cards\Adaptive\Actions\AdaptiveCardAction;
  */
 class AdaptiveCard implements AdaptiveCardElement
 {
+    use HasVersion;
+
     /**
      * Type of element.
      * Required: yes
@@ -36,88 +39,41 @@ class AdaptiveCard implements AdaptiveCardElement
      * @var array
      */
     private $actions;
-    
-    public function __construct()
+
+    /**
+     * @return static
+     */
+    public static function create(): self
     {
-        $this->setType('AdaptiveCard');
+        return new static();
     }
 
     /**
      * Returns content of card element
      *
-     * @param float $version
      * @return array
      * @throws \Exception
      */
-    public function getContent(float $version): array
+    public function jsonSerialize(): array
     {
         // if type is not set, throw exception
         if (!isset($this->type)) {
-            throw new \Exception('Card element type is not set', 500);
+            throw new \Exception('Card data type is not set', 500);
         }
 
-        $element = [
-            'type' => $this->type,
+        $data = [
+            'type' => 'AdaptiveCard',
         ];
 
-        if (isset($this->body) && $version >= 1.0) {
-            $element['body'] = $this->getBodyContent($version);
+        if (isset($this->body)) {
+            $data['body'] = $this->body;
         }
 
-        if (isset($this->actions) && $version >= 1.0) {
-            $element['actions'] = $this->getActionsContent($version);
+        if (isset($this->actions)) {
+            $data['actions'] = $this->actions;
         }
 
-
-        return $element;
-    }
-
-    /**
-     * Returns generated body content
-     * @param  float $version
-     * @return array
-     */
-    private function getBodyContent(float $version): array
-    {
-        $body = [];
-
-        foreach ($this->body as $item) {
-            if ($item instanceof AdaptiveCardElement) {
-                $body[] = $item->getContent($version);
-            }
-        }
-
-        return $body;
-    }
-
-    /**
-     * Returns generated actions content
-     * @param  float $version
-     * @return array
-     */
-    private function getActionsContent($version)
-    {
-        $actions = [];
-
-        foreach ($this->actions as $item) {
-            if ($item instanceof AdaptiveCardAction) {
-                $actions[] = $item->getContent($version);
-            }
-        }
-
-        return $actions;
-    }
-
-    /**
-     * Sets type of element
-     * @param string $type
-     * @return AdaptiveCard
-     */
-    public function setType(string $type): self
-    {
-        $this->type = $type;
-
-        return $this;
+        return $data;
     }
 
     /**
@@ -130,6 +86,8 @@ class AdaptiveCard implements AdaptiveCardElement
         if (!isset($this->body)) {
             $this->body = [];
         }
+
+        $element->setVersion($this->version);
 
         $this->body[] = $element;
 
@@ -146,6 +104,8 @@ class AdaptiveCard implements AdaptiveCardElement
         if (!isset($this->actions)) {
             $this->actions = [];
         }
+
+        $action->setVersion($this->version);
 
         $this->actions[] = $action;
 

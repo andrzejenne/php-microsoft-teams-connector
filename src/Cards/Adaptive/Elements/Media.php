@@ -40,7 +40,18 @@ class Media extends AbstractElement
      */
     private $altText;
 
-    public function __construct($sources = null)
+    /**
+     * @return static
+     */
+    public static function create(array $sources = []): self
+    {
+        return new static($sources);
+    }
+
+    /**
+     * @param array $sources
+     */
+    public function __construct(array $sources)
     {
         parent::__construct('Media');
 

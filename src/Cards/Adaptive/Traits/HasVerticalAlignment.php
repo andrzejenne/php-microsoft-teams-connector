@@ -5,24 +5,22 @@ declare(strict_types=1);
 namespace Sebbmyr\Teams\Cards\Adaptive\Traits;
 
 
-use Sebbmyr\Teams\Cards\Adaptive\Elements\ColumnSet;
-
-trait HasHorizontalAlignment
+trait HasVerticalAlignment
 {
     /**
      * @var string
-     * @enum("left", "center", "right")
-     * Controls how content is horizontally positioned within its container.
+     * @enum("top", "center", "bottom")
+     * Describes how the image should be aligned if it must be cropped or if using repeat fill mode.
      */
-    private $horizontalAlignment;
+    private $verticalAlignment;
 
     /**
      * @param string $alignment
      * @return $this
      */
-    public function setHorizontalAlignment(string $alignment): self
+    public function setVerticalAlignment(string $alignment): self
     {
-        $this->horizontalAlignment = $alignment;
+        $this->verticalAlignment = $alignment;
 
         return $this;
     }

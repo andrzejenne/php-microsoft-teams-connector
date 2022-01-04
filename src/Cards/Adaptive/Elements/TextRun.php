@@ -117,88 +117,83 @@ class TextRun extends AbstractElement
      */
     private $weight;
 
-    public function __construct($text = null)
+    /**
+     * @param string|null $text
+     * @return static
+     */
+    public static function create(string $text = null): self
     {
-        $this->setType('TextRun');
+        return new static($text);
+    }
+
+    /**
+     * @param string|null $text
+     */
+    public function __construct(?string $text = null)
+    {
+        parent::__construct('TextRun');
         $this->text = $text;
     }
 
     /**
      * Returns content of card element
      *
-     * @param float $version
      * @return array
      * @throws \Exception
      */
-    public function getContent(float $version): array
+    public function jsonSerialize(): array
     {
-        // if type is not set, throw exception
-        if (!isset($this->type)) {
-            throw new \Exception('Card element type is not set', 500);
-        }
         // if text is not set, throw exception
         if (!isset($this->text)) {
             throw new \Exception('Card element text is not set', 500);
         }
-        $element = [
+        $data = parent::jsonSerialize() + [
             'text' => $this->text,
-            'type' => $this->type,
         ];
 
-        if ($version >= 1.2) {
+        if ($this->version >= 1.2) {
             if (isset($this->color)) {
-                $element['color'] = $this->color;
+                $data['color'] = $this->color;
             }
 
             if (isset($this->fontType)) {
-                $element['fontType'] = $this->fontType;
+                $data['fontType'] = $this->fontType;
             }
 
             if (isset($this->highlight)) {
-                $element['highlight'] = $this->highlight;
+                $data['highlight'] = $this->highlight;
             }
 
             if (isset($this->isSubtle)) {
-                $element['isSubtle'] = $this->isSubtle;
+                $data['isSubtle'] = $this->isSubtle;
             }
 
             if (isset($this->italic)) {
-                $element['italic'] = $this->italic;
+                $data['italic'] = $this->italic;
             }
 
             if (isset($this->selectAction)) {
-                $element['selectAction'] = $this->selectAction;
+                $data['selectAction'] = $this->selectAction;
             }
 
             if (isset($this->size)) {
-                $element['size'] = $this->size;
+                $data['size'] = $this->size;
             }
 
             if (isset($this->strikethrough)) {
-                $element['strikethrough'] = $this->strikethrough;
+                $data['strikethrough'] = $this->strikethrough;
             }
             if (isset($this->weight)) {
-                $element['weight'] = $this->weight;
+                $data['weight'] = $this->weight;
             }
-            if (isset($this->underline) && $version >= 1.3) {
-                $element['underline'] = $this->underline;
+            if (isset($this->underline) && $this->version >= 1.3) {
+                $data['underline'] = $this->underline;
             }
         }
 
-        return $element;
+        return $data;
     }
 
-    /**
-     * Sets type of element
-     * @param string $type
-     * @return TextRun
-     */
-    public function setType(string $type): self
-    {
-        $this->type = $type;
-
-        return $this;
-    }
 
     /**
      * Sets text

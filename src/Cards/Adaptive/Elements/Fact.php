@@ -30,6 +30,14 @@ class Fact extends AbstractElement
     private $value;
 
     /**
+     * @return static
+     */
+    public static function create(string $title, string $value): self
+    {
+        return new static($title, $value);
+    }
+
+    /**
      * @param string $title
      * @param string $value
      */

@@ -3,12 +3,17 @@
 namespace Sebbmyr\Teams\Cards\Adaptive;
 
 use Sebbmyr\Teams\Cards\Adaptive\Elements\AdaptiveCardElement;
+use Sebbmyr\Teams\Cards\Adaptive\Extendables\IsToggleable;
+use Sebbmyr\Teams\Cards\Adaptive\Traits\HasSeparator;
+use Sebbmyr\Teams\Cards\Adaptive\Traits\HasVersion;
 
 /**
  * AbstractElement
  */
 abstract class AbstractElement implements AdaptiveCardElement
 {
+    use HasVersion, HasSeparator, IsToggleable;
+
     /**
      * Type of element.
      * Required: yes
@@ -18,9 +23,25 @@ abstract class AbstractElement implements AdaptiveCardElement
     private $type;
 
     /**
-     * @var float
+     * @var mixed
+     * @unimplemented
      */
-    protected $version;
+    protected $fallback;
+
+    /**
+     * @var string
+     * @version: "1.1"
+     * Specifies the height of the element.
+     * @enum("auto","stretch")
+     */
+    protected $height;
+
+    /**
+     * @var string
+     * @enum("default", "none", "small", "medium", "large", "extraLarge", "padding")
+     * Controls the amount of spacing between this element and the preceding element.
+     */
+    protected $spacing;
 
     /**
      * @param string $type
@@ -43,17 +64,35 @@ abstract class AbstractElement implements AdaptiveCardElement
             throw new \Exception('Card element type is not set', 500);
         }
 
-        return [
+        $data = [
             'type' => $this->type
         ];
-    }
 
-    /**
-     * @param float $version
-     * @return void
-     */
-    final public function setVersion(float $version)
-    {
-        $this->version = $version;
+        if (!empty($this->requires)) {
+            $data['requires'] = $this->requires;
+        }
+        if (!empty($this->id)) {
+            $data['id'] = $this->id;
+        }
+        if (is_bool($this->separator)){
+            $data['separator'] = $this->separator;
+        }
+        if (!empty($this->spacing)) {
+            $data['spacing'] = $this->spacing;
+        }
+
+        if ($this->version >= 1.1) {
+            if (!empty($this->height)) {
+                $data['height'] = $this->height;
+            }
+        }
+
+        if ($this->version >= 1.2) {
+            if (is_bool($this->isVisible)) {
+                $data['isVisible'] = $this->isVisible;
+            }
+        }
+
+        return $data;
     }
 }

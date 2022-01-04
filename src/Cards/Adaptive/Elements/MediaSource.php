@@ -30,7 +30,18 @@ class MediaSource implements \JsonSerializable
      */
     private $url;
 
-    
+    /**
+     * @return static
+     */
+    public static function create(string $mimeType = null, string $url = null): self
+    {
+        return new static($mimeType, $url);
+    }
+
+    /**
+     * @param string|null $mimeType
+     * @param string|null $url
+     */
     public function __construct(?string $mimeType = null, ?string $url = null)
     {
         $this->mimeType = $mimeType;

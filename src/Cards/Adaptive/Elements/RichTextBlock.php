@@ -2,13 +2,15 @@
 
 namespace Sebbmyr\Teams\Cards\Adaptive\Elements;
 
+use Sebbmyr\Teams\Cards\Adaptive\AbstractElement;
+
 /**
  * RichTextBlock element
  *
  * @version >= 1.2
  * @see https://adaptivecards.io/explorer/RichTextBlock.html
  */
-class RichTextBlock extends BaseElement implements AdaptiveCardElement
+class RichTextBlock extends AbstractElement
 {
     /**
      * The array of inlines.
@@ -27,56 +29,45 @@ class RichTextBlock extends BaseElement implements AdaptiveCardElement
      * @var string
      */
     private $horizontalAlignment;
-    
+
+    /**
+     * @param array $inlines
+     * @return static
+     */
+    public static function create(array $inlines = []): self
+    {
+        return new static($inlines);
+    }
+
+    /**
+     * @param null $inlines
+     */
     public function __construct($inlines = null)
     {
-        $this->setType('RichTextBlock');
+        parent::__construct('RichTextBlock');
         $this->inlines = $inlines;
     }
 
     /**
      * Returns content of card element
-     * @param  float $version
      * @return array
+     * @throws \Exception
      */
-    public function getContent($version)
+    public function jsonSerialize()
     {
         // if inlines is not set, throw exception
         if (!isset($this->inlines)) {
             throw new \Exception('Card element inlines is not set', 500);
         }
 
-        $element = $this->getBaseContent(
-            ['inlines' => $this->getInlinesContent($version)],
-            $version
-        );
+        $data = parent::jsonSerialize() +
+            ['inlines' => $this->inlines];
 
-        if (isset($this->horizontalAlignment) && $version >= 1.2) {
-            $element['horizontalAlignment'] = $this->horizontalAlignment;
+        if (isset($this->horizontalAlignment) && $this->version >= 1.2) {
+            $data['horizontalAlignment'] = $this->horizontalAlignment;
         }
 
-        return $element;
-    }
-
-    /**
-     * Returns generated inlines content
-     *
-     * @param  float $version
-     * @return array
-     */
-    private function getInlinesContent($version)
-    {
-        $inlines = [];
-
-        foreach ($this->inlines as $item) {
-            if ($item instanceof TextRun) {
-                $inlines[] = $item->getContent($version);
-            } else {
-                $inlines[] = $item;
-            }
-        }
-
-        return $inlines;
+        return $data;
     }
 
     /**
@@ -84,7 +75,7 @@ class RichTextBlock extends BaseElement implements AdaptiveCardElement
      * @param array $inlines
      * @return RichTextBlock
      */
-    public function setInlines($inlines)
+    public function setInlines(array $inlines): self
     {
         if (!isset($this->inlines)) {
             $this->inlines = [];
@@ -104,7 +95,7 @@ class RichTextBlock extends BaseElement implements AdaptiveCardElement
      * @param string $alignment
      * @return RichTextBlock
      */
-    public function setHorizontalAlignment($alignment)
+    public function setHorizontalAlignment(string $alignment): self
     {
         $this->horizontalAlignment = $alignment;
 
@@ -116,7 +107,7 @@ class RichTextBlock extends BaseElement implements AdaptiveCardElement
      * @param string $text
      * @return RichTextBlock
      */
-    public function addText($text)
+    public function addText(string $text): self
     {
         if (!isset($this->inlines)) {
             $this->inlines = [];
@@ -136,7 +127,7 @@ class RichTextBlock extends BaseElement implements AdaptiveCardElement
      * @param TextRun $text
      * @return RichTextBlock
      */
-    public function addTextRun(TextRun $text)
+    public function addTextRun(TextRun $text): self
     {
         if (!isset($this->inlines)) {
             $this->inlines = [];

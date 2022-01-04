@@ -2,43 +2,40 @@
 
 namespace Sebbmyr\Teams\Cards\Adaptive\Elements;
 
-use Sebbmyr\Teams\Cards\Adaptive\AbstractElement;
+use Sebbmyr\Teams\Cards\Adaptive\Extendables\IsToggleable;
+use Sebbmyr\Teams\Cards\Adaptive\Traits\HasBackgroundImage;
+use Sebbmyr\Teams\Cards\Adaptive\Traits\HasBleed;
+use Sebbmyr\Teams\Cards\Adaptive\Traits\HasMinHeight;
+use Sebbmyr\Teams\Cards\Adaptive\Traits\HasVersion;
 
 /**
- * Fact
+ * Column
  *
- * @version >= 1.0
- * @see https://adaptivecards.io/explorer/Fact.html
+ * @see https://adaptivecards.io/explorer/Column.html
  */
-class Fact extends AbstractElement
+class Column implements \JsonSerializable
 {
+    use IsToggleable, HasMinHeight, HasBleed, HasBackgroundImage, HasVersion;
 
     /**
-     * The title of the fact.
-     * Required: yes
-     * @version 1.0
-     * @var string
+     * @var array
      */
-    private $title;
+    private $items;
 
     /**
-     * The value of the fact.
-     * Required: yes
-     * @version 1.0
-     * @var string
+     * @return static
      */
-    private $value;
-
-    /**
-     * @param string $title
-     * @param string $value
-     */
-    public function __construct(string $title, string $value)
+    public static function create(array $items = []): self
     {
-        parent::__construct('Fact');
+        return new static($items);
+    }
 
-        $this->title = $title;
-        $this->value = $value;
+    /**
+     * @param array $items
+     */
+    public function __construct(array $items)
+    {
+        $this->items = $items;
     }
 
     /**
@@ -49,9 +46,29 @@ class Fact extends AbstractElement
      */
     public function jsonSerialize()
     {
-        return parent::jsonSerialize() + [
-            'title' => $this->title,
-            'value' => $this->value,
+        if (empty($this->items)) {
+            throw new \Exception("Column item items property is not set", 500);
+        }
+
+        $data = [
+            'type' => 'Column',
+            'items' => $this->items
         ];
+
+        if ($this->version >= 1.2) {
+            if (!empty($this->backgroundImage)) {
+                $data['backgroundImage'] = $this->backgroundImage;
+            }
+
+            if (is_bool($this->bleed)) {
+                $data['bleed'] = $this->bleed;
+            }
+
+            if (!empty($this->minHeight)) {
+                $data['minHeight'] = $this->minHeight;
+            }
+        }
+
+        return $data;
     }
 }
