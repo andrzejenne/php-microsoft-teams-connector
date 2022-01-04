@@ -7,6 +7,7 @@ use Sebbmyr\Teams\Cards\Adaptive\Traits\HasBackgroundImage;
 use Sebbmyr\Teams\Cards\Adaptive\Traits\HasBleed;
 use Sebbmyr\Teams\Cards\Adaptive\Traits\HasMinHeight;
 use Sebbmyr\Teams\Cards\Adaptive\Traits\HasVersion;
+use Sebbmyr\Teams\Cards\Adaptive\Traits\HasWidth;
 
 /**
  * Column
@@ -15,7 +16,7 @@ use Sebbmyr\Teams\Cards\Adaptive\Traits\HasVersion;
  */
 class Column implements \JsonSerializable
 {
-    use IsToggleable, HasMinHeight, HasBleed, HasBackgroundImage, HasVersion;
+    use IsToggleable, HasMinHeight, HasWidth, HasBleed, HasBackgroundImage, HasVersion;
 
     /**
      * @var array
@@ -54,6 +55,10 @@ class Column implements \JsonSerializable
             'type' => 'Column',
             'items' => $this->items
         ];
+
+        if (!empty($this->width)) {
+            $data['width'] = $this->width;
+        }
 
         if ($this->version >= 1.2) {
             if (!empty($this->backgroundImage)) {

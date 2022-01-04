@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace Sebbmyr\Teams\Cards\Adaptive\Traits;
 
 
-use Sebbmyr\Teams\Cards\Adaptive\Elements\ColumnSet;
-
 trait HasBleed
 {
     /**
