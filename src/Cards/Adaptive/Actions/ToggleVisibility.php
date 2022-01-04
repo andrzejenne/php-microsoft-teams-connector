@@ -12,6 +12,20 @@ class ToggleVisibility extends AbstractAction
      */
     private $targetElements;
 
+    /**
+     * @param string $title
+     * @param array $targetElements
+     * @return static
+     */
+    public static function create(string $title, array $targetElements): self
+    {
+        return new static($title, $targetElements);
+    }
+
+    /**
+     * @param string $title
+     * @param array $targetElements
+     */
     public function __construct(string $title, array $targetElements = [])
     {
         parent::__construct('Action.ToggleVisibility');
