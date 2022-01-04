@@ -70,6 +70,9 @@ class CustomAdaptiveCard extends Card
         $card = [
             'contentType' => 'application/vnd.microsoft.card.adaptive',
             'contentUrl' => null,
+            'msteams' => [
+                'width' => 'Full'
+            ],
             'content' => [
                 '\$schema' => 'http://adaptivecards.io/schemas/adaptive-card.json',
                 'type' => 'AdaptiveCard',
