@@ -10,7 +10,7 @@ trait HasVersion
     /**
      * @var float
      */
-    protected $version;
+    public $version;
 
     /**
      * @param float $version
