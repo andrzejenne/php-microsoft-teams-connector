@@ -76,4 +76,19 @@ class Column implements \JsonSerializable
 
         return $data;
     }
+
+    /**
+     * @param AdaptiveCardElement $element
+     * @return $this
+     */
+    public function addItem(AdaptiveCardElement $element): self
+    {
+        if (!isset($this->items)) {
+            $this->items = [];
+        }
+
+        $this->items[] = $element;
+
+        return $this;
+    }
 }
